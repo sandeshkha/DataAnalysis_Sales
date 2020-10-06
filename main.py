@@ -4,7 +4,7 @@ import os
 import matplotlib.pyplot as plt
 
 #combining multiple csv files into one file
-os.chdir("/Users/sandeshkhanal/Documents/Pandas-Data-Science-Tasks-master/SalesAnalysis/Sales_Data")
+os.chdir('/Sales_Data')
 
 extension = 'csv'
 all_filenames = [i for i in glob.glob(('*.{}'.format(extension)))]
@@ -15,7 +15,7 @@ combined_csv.to_csv("totalsales_csv.csv", index=False, encoding='utf-8-sig')
 
 
 # read the updated dataframe
-all_data = pd.read_csv('/Users/sandeshkhanal/Documents/Pandas-Data-Science-Tasks-master/SalesAnalysis/Sales_Data/totalsales_csv.csv')
+all_data = pd.read_csv('totalsales_csv.csv')
 
 #Clean up data
 nan_df = all_data[all_data.isna().any(axis=1)]
