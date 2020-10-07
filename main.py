@@ -2,6 +2,8 @@ import pandas as pd
 import glob
 import os
 import matplotlib.pyplot as plt
+from itertools import combinations
+from collections import Counter
 
 #combining multiple csv files into one file
 os.chdir('/Sales_Data')
@@ -52,11 +54,11 @@ def get_state(address):
 all_data['City'] = all_data['Purchase Address'].apply(lambda x: f"{get_city(x)} ({get_state(x)})")
 
 # Plot City Sales Data
-cities [city for city, df in all_data.groupby('City')]
+cities = [city for city, df in all_data.groupby('City')]
 City = all_data['City'].unique()
-plt.bar(citites, results['Sales'])
-plt.xticks('citites', rotation ='vertical', size = 8)
-plt.ylabel('US Citites')
+plt.bar(cities, results['Sales'])
+plt.xticks('cities', rotation ='vertical', size = 8)
+plt.ylabel('US Cities')
 plt.xlabel('Sales in USD')
 plt.show()
 
@@ -81,3 +83,39 @@ plt.ylabel('Number of orders')
 df = all_data[all_data['Order ID'].duplicated(keep=False)]
 df['Grouped'] = df.groupby('Order ID')['Product'].transform(lambda x: ','.join(x))
 df = df[['Order ID', 'Grouped']].drop_duplicates()
+
+count = Counter()
+
+# The two most grouped product in sale
+for row in df['Grouped']:
+    row_list = row.split(',')
+    count.update(Counter(combinations(row_list, 2)))
+
+for key, value in count.most_common(10):
+    print(key,value)
+
+#
+product_data = all_data.groupby['Product']
+quantity_ordered = product_data.sum()['Quantity Ordered']
+
+products = [product for product, df in product_data]
+
+#Graph Products and the quantity ordered
+plt.bar(products, quantity_ordered)
+plt.xticks(products, rotation ='vertical', size = 8)
+plt.ylabel('Quantity Ordered')
+plt.xlabel('Product')
+plt.show()
+
+#Comparing two graphs with quantiy and price of the products
+prices = all_data.groupby('Product').mean()['Price Each']
+
+fig, ax1 = plt.subplots()
+ax2 = ax1.twinx()
+ax1.bar(products, quantity_ordered, 'g-')
+ax2.bar(products, prices, 'b-')
+
+ax1.set_xlabel("Product Name")
+ax1.set_xlabel("Quantity Ordered", color='g')
+ax2.set_ylabel("Price ($)", color='b')
+ax1.set_xticklabels(products, rotaion='vertical', size=8)
