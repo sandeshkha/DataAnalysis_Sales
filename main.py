@@ -76,3 +76,8 @@ plt.xticks(hours)
 plt.grid()
 plt.xlabel('Hour')
 plt.ylabel('Number of orders')
+
+#Create a new dataframe to group all ordered items together
+df = all_data[all_data['Order ID'].duplicated(keep=False)]
+df['Grouped'] = df.groupby('Order ID')['Product'].transform(lambda x: ','.join(x))
+df = df[['Order ID', 'Grouped']].drop_duplicates()
